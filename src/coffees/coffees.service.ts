@@ -17,6 +17,8 @@ export class CoffeesService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private dataSource: DataSource,
+    // @Inject(coffeesConfig.KEY)
+    // private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
   ) {}
 
   async findAll(paginationQuery: PaginationQueryDto): Promise<Coffee[]> {
@@ -27,17 +29,17 @@ export class CoffeesService {
     });
   }
 
-  async findOne(id: string): Promise<Coffee> {
-    const coffee = await this.coffeeRepository.findOne({
-      where: { id },
-      relations: ['flavors'],
-    });
+  async findOne(id: number): Promise<Coffee> {
+    try {
+      const coffee = await this.coffeeRepository.findOne({
+        where: { id },
+        relations: ['flavors'],
+      });
 
-    if (!coffee) {
+      return coffee;
+    } catch {
       throw new NotFoundException('Some test message');
     }
-
-    return coffee;
   }
 
   async create(createCoffeeDto: CreateCoffeeDto): Promise<Coffee> {
@@ -53,7 +55,7 @@ export class CoffeesService {
   }
 
   async update(
-    id: string,
+    id: number,
     updateCoffeeDto: UpdateCoffeeDtoTs,
   ): Promise<Coffee> {
     const flavors =
@@ -76,7 +78,7 @@ export class CoffeesService {
     return this.coffeeRepository.save(coffee);
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     const coffee = await this.findOne(id);
 
     return this.coffeeRepository.remove(coffee);
