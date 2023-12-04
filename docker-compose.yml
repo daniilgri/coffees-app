@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   db:
-    image: mongo
+    image: postgres
     restart: always
     ports:
-      - '27017:27017'
+      - '5432:5432'
     environment:
-      - MONGODB_DATABASE=fundAppV2
+      - POSTGRES_PASSWORD=postgres
